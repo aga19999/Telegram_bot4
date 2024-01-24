@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .custom-block {
+            background-color: #f8f9fa; /* Colore di sfondo */
+            padding: 20px; /* Spaziatura interna */
+            border: 1px solid #dee2e6; /* Bordo */
+            border-radius: 5px; /* Bordo arrotondato */
+            margin-bottom: 20px; /* Margine inferiore */
+        }
+
+        .custom-block p {
+            margin-bottom: 10px; /* Margine inferiore per i paragrafi */
+        }
+
+        tr {
+            font-size: 12px; /* Imposta la dimensione del font desiderata */
+        }
+
+        td:nth-child(2) {
+            /* Regola lo stile della colonna centrale */
+            width: 40%; /* Modifica questo valore per adattare la larghezza desiderata */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">Relazioni:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Non mi sono sentito ascoltato, compreso e rispettato</td>
+                    <td>
+                        <div class="custom-block">
+                            <input type="range" class="form-control-range" id="rangeInput1" name="rangeInput1" min="1" max="5">
+                        </div>
+                    </td>
+                    <td>Mi sono sentito ascoltato, compreso e rispettato</td>
+                </tr>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">Obbiettivi e argomenti:</th>
+                </tr>
+                <tr>
+                    <td>Non abbiamo lavorato né parlato di ciò su cui volevo lavorare e parlare</td>
+                    <td>
+                        <div class="custom-block">
+                            <input type="range" class="form-control-range" id="rangeInput2" name="rangeInput2" min="1" max="5">
+                        </div>
+                    </td>
+                    <td>Abbiamo lavorato e parlato di ciò su cui volevo lavorare e parlare</td>
+                </tr>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">Approccio e metodo:</th>
+                </tr>
+                <tr>
+                    <td>L'approccio del terapeuta non è adatto a me</td>
+                    <td>
+                        <div class="custom-block">
+                            <input type="range" class="form-control-range" id="rangeInput3" name="rangeInput3" min="1" max="5">
+                        </div>
+                    </td>
+                    <td>L'approccio del terapeuta è adatto a me</td>
+                </tr>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">Complessivamente:</th>
+                </tr>
+                <tr>
+                    <td>C'era qualcosa che mancava nella sessione di oggi</td>
+                    <td>
+                        <div class="custom-block">
+                            <input type="range" class="form-control-range" id="rangeInput4" name="rangeInput4" min="1" max="5">
+                        </div>
+                    </td>
+                    <td>Nel complesso, la sessione di oggi è giusta per me</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
