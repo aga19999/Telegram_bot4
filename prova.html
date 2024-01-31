@@ -83,11 +83,6 @@
                     </td>
                     <td>Nel complesso, la sessione di oggi è giusta per me</td>
                 </tr>
-                <tr>
-                    <th scope="col" colspan="3" class="text-center">
-                        <button type="button" class="btn btn-primary" ng-click="conferma()">Conferma</button>
-                    </th>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -106,7 +101,7 @@
             ];
 
             const mainButton = window.Telegram.WebApp.MainButton;
-            mainButton.text = "Save Preferences";
+            mainButton.text = "Salva Preferenze";
             mainButton.enable();
             mainButton.show();
 
@@ -116,7 +111,6 @@
 
             $scope.conferma = function () {
                 console.log("Dati confermati:", $scope.scalaValutazione);
-                // Puoi aggiungere qui la logica per inviare i dati a Telegram o a un backend
             };
         });
     </script>
