@@ -42,7 +42,7 @@
                     <td>Non mi sono sentito ascoltato, compreso e rispettato</td>
                     <td>
                         <div class="custom-block">
-                            <input type="range" class="form-control-range" id="rangeInput1" name="rangeInput1" min="1" max="5" ng-model="scalaValutazione[0].value">
+                            <input type="range" class="form-control-range" id="rangeInput1" name="rangeInput1" min="1" max="10" step="0.01" ng-model="scalaValutazione[0].value">
                         </div>
                     </td>
                     <td>Mi sono sentito ascoltato, compreso e rispettato</td>
@@ -54,7 +54,7 @@
                     <td>Non abbiamo lavorato né parlato di ciò su cui volevo lavorare e parlare</td>
                     <td>
                         <div class="custom-block">
-                            <input type="range" class="form-control-range" id="rangeInput2" name="rangeInput2" min="1" max="5" ng-model="scalaValutazione[1].value">
+                            <input type="range" class="form-control-range" id="rangeInput2" name="rangeInput2" min="1" max="10" step="0.01" ng-model="scalaValutazione[1].value">
                         </div>
                     </td>
                     <td>Abbiamo lavorato e parlato di ciò su cui volevo lavorare e parlare</td>
@@ -66,7 +66,7 @@
                     <td>L'approccio del terapeuta non è adatto a me</td>
                     <td>
                         <div class="custom-block">
-                            <input type="range" class="form-control-range" id="rangeInput3" name="rangeInput3" min="1" max="5" ng-model="scalaValutazione[2].value">
+                            <input type="range" class="form-control-range" id="rangeInput3" name="rangeInput3" min="1" max="10" step="0.01" ng-model="scalaValutazione[2].value">
                         </div>
                     </td>
                     <td>L'approccio del terapeuta è adatto a me</td>
@@ -78,7 +78,7 @@
                     <td>C'era qualcosa che mancava nella sessione di oggi</td>
                     <td>
                         <div class="custom-block">
-                            <input type="range" class="form-control-range" id="rangeInput4" name="rangeInput4" min="1" max="5" ng-model="scalaValutazione[3].value">
+                            <input type="range" class="form-control-range" id="rangeInput4" name="rangeInput4" min="1" max="10" step="0.01" ng-model="scalaValutazione[3].value">
                         </div>
                     </td>
                     <td>Nel complesso, la sessione di oggi è giusta per me</td>
@@ -112,7 +112,10 @@
             $scope.conferma = function () {
                 console.log("Dati confermati:", $scope.scalaValutazione);
             };
+
         });
     </script>
 </body>
 </html>
+
+
