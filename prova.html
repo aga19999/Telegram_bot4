@@ -94,10 +94,10 @@
     <script>
         angular.module("custom-webapp-ui", []).controller('CustomUIController', function ($scope) {
             $scope.scalaValutazione = [
-                { name: "Non mi sono sentito ascoltato, compreso e rispettato", value: 3 },
-                { name: "Non abbiamo lavorato né parlato di ciò su cui volevo lavorare e parlare", value: 3 },
-                { name: "L'approccio del terapeuta non è adatto a me", value: 3 },
-                { name: "C'era qualcosa che mancava nella sessione di oggi", value: 3 }
+                { name: "", value: 3 },
+                { name: "", value: 3 },
+                { name: "", value: 3 },
+                { name: "", value: 3 }
             ];
 
             const mainButton = window.Telegram.WebApp.MainButton;
@@ -112,6 +112,15 @@
             $scope.conferma = function () {
                 console.log("Dati confermati:", $scope.scalaValutazione);
             };
+
+            $timeout(function () {
+                $scope.scalaValutazione.forEach(function (item) {
+                    item.value = 5;
+                    """Questo potrebbe servire perché per ingrandile lo slider ho dovuto"""
+                    """effettuare uno zoom del 40% quindi potrei dover inserire"""
+                    """+ ((5 * 40) / 100);"""
+                });
+            });
 
         });
     </script>
