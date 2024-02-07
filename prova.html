@@ -94,7 +94,6 @@
     <script>
         angular.module("custom-webapp-ui", []).controller('CustomUIController', function ($scope) {
             $scope.scalaValutazione = [3, 3, 3, 3];
-            $scope.$apply();
             const mainButton = window.Telegram.WebApp.MainButton;
             mainButton.text = "Salva Preferenze";
             mainButton.enable();
