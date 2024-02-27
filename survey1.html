@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html ng-app="custom-webapp-ui" lang="it">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        .custom-block {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .custom-block p {
+            margin-bottom: 10px;
+        }
+
+        tr {
+            font-size: 12px;
+        }
+
+        td:nth-child(2) {
+            width: 40%;
+        }
+    </style>
+</head>
+<body ng-app="custom-webapp-ui" ng-controller="CustomUIController">
+    <div class="container-fluid">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">Relazioni:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Non mi sono sentito ascoltato, compreso e rispettato</td>
+                    <td>
+                        <div class="custom-block">
+                            <input type="range" class="form-control-range" id="rangeInput1" name="rangeInput1" min="0" max="50" step="0.01" ng-model="scalaValutazione[0].value">
+                        </div>
+                    </td>
+                    <td>Mi sono sentito ascoltato, compreso e rispettato</td>
+                </tr>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">Obbiettivi e argomenti:</th>
+                </tr>
+                <tr>
+                    <td>Non abbiamo lavorato né parlato di ciò su cui volevo lavorare e parlare</td>
+                    <td>
+                        <div class="custom-block">
+                            <input type="range" class="form-control-range" id="rangeInput2" name="rangeInput2" min="0" max="50" step="0.01" ng-model="scalaValutazione[1].value">
+                        </div>
+                    </td>
+                    <td>Abbiamo lavorato e parlato di ciò su cui volevo lavorare e parlare</td>
+                </tr>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">Approccio e metodo:</th>
+                </tr>
+                <tr>
+                    <td>L'approccio del terapeuta non è adatto a me</td>
+                    <td>
+                        <div class="custom-block">
+                            <input type="range" class="form-control-range" id="rangeInput3" name="rangeInput3" min="0" max="50" step="0.01" ng-model="scalaValutazione[2].value">
+                        </div>
+                    </td>
+                    <td>L'approccio del terapeuta è adatto a me</td>
+                </tr>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">Complessivamente:</th>
+                </tr>
+                <tr>
+                    <td>C'era qualcosa che mancava nella sessione di oggi</td>
+                    <td>
+                        <div class="custom-block">
+                            <input type="range" class="form-control-range" id="rangeInput4" name="rangeInput4" min="0" max="50" step="0.01" ng-model="scalaValutazione[3].value">
+                        </div>
+                    </td>
+                    <td>Nel complesso, la sessione di oggi è giusta per me</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        angular.module("custom-webapp-ui", []).controller('CustomUIController', function ($scope, $timeout) {
+            $scope.scalaValutazione = [
+                { name: "Risposta 1 ", value: 3 },
+                { name: "Risposta 2 ", value: 3 },
+                { name: "Risposta 3 ", value: 3 },
+                { name: "Risposta 4 ", value: 3 }
+            ];
+
+            const mainButton = window.Telegram.WebApp.MainButton;
+            mainButton.text = "Salva Preferenze";
+            mainButton.enable();
+            mainButton.show();
+
+            mainButton.onClick(function () {
+                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
+            });
+
+            $scope.conferma = function () {
+                console.log("Dati confermati:", $scope.scalaValutazione);
+            };
+
+            $timeout(function () {
+                $scope.scalaValutazione.forEach(function (item) {
+                    item.value = 25;
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
