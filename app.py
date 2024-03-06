@@ -81,6 +81,8 @@ async def mostra_dati_raccolti(update: Update, context: CallbackContext):
     except Exception as e:
         print(f"Errore durante il recupero delle risposte: {e}")
 
+#
+
 
 if __name__ == '__main__':
     print(f"Il bot è in uso! Usalo cliccando qui: http://t.me/{BOT_USERNAME} !")
