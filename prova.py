@@ -4,8 +4,6 @@ from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler, Me
 from credentials import BOT_TOKEN, BOT_USERNAME, PASSWORD_DATABASE, MIO_ID_UTENTE
 import pymysql.cursors
 import json
-import time
-import threading
 from datetime import datetime, timedelta
 
 logging.basicConfig(
@@ -97,28 +95,31 @@ async def invia_questionario(context: ContextTypes.DEFAULT_TYPE) -> None:
     url = f"Clicca qui per completare il questionario: {data["survey"]}"
     print(url)
     # Manda il questionario all'utente
-    print(f"Invio il questionario a {data["id_utente"]} - Link: {url}")
-    await context.bot.send_message(chat_id=data["id_utente"], text=url)
+    print(f"Invio il questionario a {data["telegram_user_id"]} - Link: {url}")
+    await context.bot.send_message(chat_id=data["telegram_user_id"], text=url)
 
 async def fetch_elenco_sessioni(context: ContextTypes.DEFAULT_TYPE) -> None:
     with connection.cursor() as cursor:
         # Seleziona le sessioni nel prossimo minuto
-        query = "SELECT dataInvio, id_utente, survey, status FROM sessioni WHERE dataInvio > %s AND dataInvio <= %s"
+        query = """SELECT dataInvio, u.telegram_user_id , us.id_utente, us.id_sessione, survey, stato 
+                    FROM sessioni s 
+                    INNER JOIN utenti_sessioni us 
+                    ON s.id = us.id_sessione 
+                    INNER JOIN utenti u ON u.id = us.id_utente 
+                    WHERE dataInvio > %s AND dataInvio <= %s AND stato = 0"""
         now = datetime.now()
-        half_before = now - timedelta(minutes=30)
-
+        half_before = now - timedelta(minutes=60)
         cursor.execute(query, (half_before, now))
         elenco_sessioni = cursor.fetchall()
+        print(elenco_sessioni)
         for sessione in elenco_sessioni:
-            if sessione["status"] == 0:
-                print(now - timedelta(hours=1))
-                context.job_queue.run_once(invia_questionario, now - timedelta(hours=1), data=sessione)
-                # Aggiorna lo status della sessione evitando che venga ripetuta più volte
-                with connection.cursor() as cursor:
-                    query_update_status = "UPDATE sessioni SET status = 1 WHERE id_utente = %s AND dataInvio = %s"
-                    cursor.execute(query_update_status, (sessione["id_utente"], sessione["dataInvio"]))
-                    connection.commit()
-                    print(f"Stato della sessione aggiornato a 1 per l'utente {sessione["id_utente"]}")
+            context.job_queue.run_once(invia_questionario, now - timedelta(hours=1), data=sessione)
+             # Aggiorna lo status della sessione evitando che venga ripetuta più volte
+            with connection.cursor() as cursor:
+                query_update_status = "UPDATE utenti_sessioni SET stato = 1 WHERE id_utente = %s AND id_sessione = %s"
+                cursor.execute(query_update_status, (sessione["id_utente"], sessione["id_sessione"]))
+                connection.commit()
+                print(f"Stato della sessione aggiornato a 1 per l'utente {sessione["id_utente"]}")
 
 async def aggiungi_sessioni_prova(context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
