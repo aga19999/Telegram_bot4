@@ -64,7 +64,7 @@ async def web_app_data(update: Update, context: CallbackContext):
             user_result = cursor.fetchone()
 
             if user_result:
-                # Ottieni l'id della sessione associata all'utente dalla tabella utenti_sessioni
+                # Ottiene l'id della sessione associata all'utente dalla tabella utenti_sessioni
                 query_session_id = """SELECT us.id_sessione 
                                       FROM utenti_sessioni us
                                       JOIN utenti u
@@ -110,9 +110,11 @@ async def mostra_dati_raccolti(update: Update, context: CallbackContext):
 async def invia_questionario(context: ContextTypes.DEFAULT_TYPE) -> None:
     data = context.job.data
     now = datetime.now() - timedelta(hours=2)
-    context.job_queue.run_once(reminder_utente, now + timedelta(seconds=60), data=data)
+    # Posso inserire direttamente la chiave tra apici senza inserire la notazione posizionale
+    # grazie alla libreria SQLAlchemy
     url = data["survey"]
     id_utente = data["telegram_user_id"]
+    context.job_queue.run_once(reminder_utente, now + timedelta(seconds=20), data=data)
     # Manda il questionario all'utente
     kb = [
         [KeyboardButton("Clicca qui!", web_app=WebAppInfo(url))]
@@ -129,6 +131,7 @@ async def reminder_utente(context: ContextTypes.DEFAULT_TYPE) -> None:
         url = data["survey"]
         id_utente = data["telegram_user_id"]
         id_sessione = data["id_sessione"]
+        now = datetime.now() - timedelta(hours=2)
 
         with connection.cursor() as cursor:
             # Per evitare delle eccezioni seleziona il numero di righe a cui è associata l'id della sessione
@@ -141,6 +144,9 @@ async def reminder_utente(context: ContextTypes.DEFAULT_TYPE) -> None:
             count = cursor.fetchone()  # Ottieni il valore del conteggio
             # Se il conteggio è zero, invia il reminder
             if count['COUNT(*)'] == 0:
+                # Richiamo la funzione di timeout nel caso in cui anche dopo il reminder l'utente decida di non
+                # compilare il questionario
+                context.job_queue.run_once(timeout_sondaggio, now + timedelta(seconds=20), data=data)
                 kb = [
                     [KeyboardButton("Clicca qui!", web_app=WebAppInfo(url))]
                 ]
@@ -149,8 +155,34 @@ async def reminder_utente(context: ContextTypes.DEFAULT_TYPE) -> None:
                                                reply_markup=ReplyKeyboardMarkup(kb))
     except Exception as e:
         logging.error(
-            f"Si è verificato un errore durante l'esecuzione della funzione reminder_utente: {type(e).__name__} - {e}")
+            f"Si è verificato un errore: {type(e).__name__} - {e}")
 
+
+""" Se l'utente dopo il reminder non compila il questionario,
+                    esaurisce la possibilità di farlo """
+async def timeout_sondaggio(context: ContextTypes.DEFAULT_TYPE) -> None:
+    try:
+        data = context.job.data
+        id_utente = data["telegram_user_id"]
+        id_sessione = data["id_sessione"]
+
+        with connection.cursor() as cursor:
+            # Per evitare delle eccezioni seleziona il numero di righe a cui è associata l'id della sessione
+            # Se il valore è 0 allora l'utente non ha compilato il questionario
+            # Se il valore è 1 allora l'utente ha già compilato il questionario e non verrà mandato il reminder
+            query = """SELECT COUNT(*)
+                                   FROM rilevazioni 
+                                   WHERE id_sessione = %s"""
+            cursor.execute(query, (id_sessione,))
+            count = cursor.fetchone()  # Ottieni il valore del conteggio
+            # Se il conteggio è zero, invia il reminder
+            if count['COUNT(*)'] == 0:
+                await context.bot.send_message(chat_id=id_utente,
+                                               text="Ops! Tempo scaduto. Sondaggio non più disponibile",
+                                               reply_markup=ReplyKeyboardRemove())
+    except Exception as e:
+        logging.error(
+            f"Si è verificato un errore: {type(e).__name__} - {e}")
 
 async def fetch_elenco_sessioni(context: ContextTypes.DEFAULT_TYPE) -> None:
     with connection.cursor() as cursor:
@@ -165,13 +197,16 @@ async def fetch_elenco_sessioni(context: ContextTypes.DEFAULT_TYPE) -> None:
         one_minute_after = now + timedelta(minutes=1)
         cursor.execute(query, (now, one_minute_after))
         elenco_sessioni = cursor.fetchall()
-        print(elenco_sessioni)
+        for elenco in elenco_sessioni:
+            if elenco_sessioni is not None:
+                print(elenco)
+
         for sessione in elenco_sessioni:
             context.job_queue.run_once(invia_questionario, (sessione["dataInvio"] - timedelta(hours=2)), data=sessione)
             # Aggiorna lo status della sessione evitando che venga ripetuta più volte
-            with connection.cursor() as cursor:
+            with connection.cursor() as cursor1:
                 query_update_status = "UPDATE utenti_sessioni SET stato = 1 WHERE id_utente = %s AND id_sessione = %s"
-                cursor.execute(query_update_status, (sessione["id_utente"], sessione["id_sessione"]))
+                cursor1.execute(query_update_status, (sessione["id_utente"], sessione["id_sessione"]))
                 connection.commit()
 
 
