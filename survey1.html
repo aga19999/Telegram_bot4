@@ -34,9 +34,6 @@
 <body ng-app="custom-webapp-ui" ng-controller="CustomUIController">
     <div class="container-fluid">
         <table class="table">
-            <thead>
-
-            </thead>
             <tbody>
                 <tr>
                     <th scope="col" colspan="3" class="text-center">Relazioni:</th>
@@ -97,12 +94,12 @@
     <script>
         const tele = window.Telegram.WebApp;
         tele.expand();
-        angular.module("custom-webapp-ui", []).controller('CustomUIController', function ($scope, $timeout) {
+        angular.module("custom-webapp-ui", []).controller('CustomUIController', function ($scope) {
             $scope.scalaValutazione = [
-                { name: "Risposta 1 ", value: 3 },
-                { name: "Risposta 2 ", value: 3 },
-                { name: "Risposta 3 ", value: 3 },
-                { name: "Risposta 4 ", value: 3 }
+                { name: "Risposta 1 ", value: 25 },
+                { name: "Risposta 2 ", value: 25 },
+                { name: "Risposta 3 ", value: 25 },
+                { name: "Risposta 4 ", value: 25 }
             ];
 
             const mainButton = window.Telegram.WebApp.MainButton;
@@ -116,13 +113,6 @@
             $scope.conferma = function () {
                 console.log("Dati confermati:", $scope.scalaValutazione);
             };
-
-            $timeout(function () {
-                $scope.scalaValutazione.forEach(function (item) {
-                    item.value = 25;
-                });
-            });
-
         });
     </script>
 </body>

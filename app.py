@@ -100,8 +100,8 @@ async def mostra_dati_raccolti(update: Update, context: CallbackContext):
             cursor.execute(query, user_id)
             risposte = cursor.fetchall()
             # Manda i risultati all'utente
-            for response in risposte:
-                await update.message.reply_text(f"Risposta: {response['risposta']}")
+            for risposta in risposte:
+                await update.message.reply_text(f"Risposta: {risposta['risposta']}")
 
     except Exception as e:
         print(f"Errore durante il recupero delle risposte: {e}")
@@ -110,7 +110,7 @@ async def mostra_dati_raccolti(update: Update, context: CallbackContext):
 async def invia_questionario(context: ContextTypes.DEFAULT_TYPE) -> None:
     data = context.job.data
     now = datetime.now() - timedelta(hours=2)
-    # Posso inserire direttamente la chiave tra apici senza inserire la notazione posizionale
+    # Posso inserire direttamente la chiave tra apici senza indicare la posizione
     # grazie alla libreria SQLAlchemy
     url = data["survey"]
     id_utente = data["telegram_user_id"]
@@ -137,16 +137,18 @@ async def reminder_utente(context: ContextTypes.DEFAULT_TYPE) -> None:
             # Per evitare delle eccezioni seleziona il numero di righe a cui è associata l'id della sessione
             # Se il valore è 0 allora l'utente non ha compilato il questionario
             # Se il valore è 1 allora l'utente ha già compilato il questionario e non verrà mandato il reminder
-            query = """SELECT COUNT(*)
-                                   FROM rilevazioni 
-                                   WHERE id_sessione = %s"""
-            cursor.execute(query, (id_sessione,))
-            count = cursor.fetchone()  # Ottieni il valore del conteggio
+            query = """SELECT *
+                        FROM rilevazioni 
+                        WHERE id_sessione = %s AND id_utente = %s"""
+            cursor.execute(query, (id_sessione, id_utente))
+            rilevazione = cursor.fetchone()
+
+
             # Se il conteggio è zero, invia il reminder
-            if count['COUNT(*)'] == 0:
+            if rilevazione is None:
                 # Richiamo la funzione di timeout nel caso in cui anche dopo il reminder l'utente decida di non
                 # compilare il questionario
-                context.job_queue.run_once(timeout_sondaggio, now + timedelta(seconds=20), data=data)
+                # context.job_queue.run_once(timeout_sondaggio, now + timedelta(seconds=20), data=data)
                 kb = [
                     [KeyboardButton("Clicca qui!", web_app=WebAppInfo(url))]
                 ]
@@ -194,8 +196,8 @@ async def fetch_elenco_sessioni(context: ContextTypes.DEFAULT_TYPE) -> None:
                     INNER JOIN utenti u ON u.id = us.id_utente 
                     WHERE dataInvio > %s AND dataInvio <= %s AND stato = 0"""
         now = datetime.now()
-        one_minute_after = now + timedelta(minutes=1)
-        cursor.execute(query, (now, one_minute_after))
+        one_hours_after = now + timedelta(minutes=60)
+        cursor.execute(query, (now, one_hours_after))
         elenco_sessioni = cursor.fetchall()
         for elenco in elenco_sessioni:
             if elenco_sessioni is not None:
