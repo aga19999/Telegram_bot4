@@ -114,7 +114,7 @@
             };
 
             function inviaDatiAlBot(dati) {
-                window.Telegram.WebApp.sendData(JSON.stringify(dati));
+                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
             }
 
             function confermaInvioDati() {
