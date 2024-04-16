@@ -110,13 +110,10 @@
 
             $scope.inviaDati = function() {
                 window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
-                if (window.opener) {
-                    window.close();
-                } else {
-                    setTimeout(function() {
-                        window.close();
-                    }, 1000);
-                }
+            };
+
+            $scope.conferma = function () {
+                console.log("Dati confermati:", $scope.scalaValutazione);
             };
 
             $timeout(function () {
