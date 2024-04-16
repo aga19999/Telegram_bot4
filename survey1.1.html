@@ -115,7 +115,10 @@
             });
 
             $scope.inviaDati = function() {
-                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione))
+                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
+                setTimeout(function() {
+                    window.close();
+                });
             };
 
             $scope.conferma = function () {
