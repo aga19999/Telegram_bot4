@@ -108,8 +108,14 @@
                 { name: "Risposta 4", value: 3 }
             ];
 
+            function inviaDatiAlBot(dati) {
+                const datiJSON = JSON.stringify(dati);
+                Telegram.WebApp.sendData(datiJSON);
+            }
+
             $scope.inviaDati = function() {
-                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
+                inviaDatiAlBot($scope.scalaValutazione);
+                window.close();
             };
 
             $scope.conferma = function () {
