@@ -116,7 +116,10 @@
 
             $scope.inviaDati = function() {
                 window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione))
-                alert('Dati del sondaggio inviati con successo!');
+            };
+
+            $scope.conferma = function () {
+                console.log("Dati confermati:", $scope.scalaValutazione);
             };
         });
     </script>
