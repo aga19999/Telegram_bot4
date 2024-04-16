@@ -101,30 +101,36 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         angular.module('custom-webapp-ui', []).controller('CustomUIController', function($scope, $timeout) {
-            $scope.scalaValutazione = [
-                { name: "Risposta 1", value: 3 },
-                { name: "Risposta 2", value: 3 },
-                { name: "Risposta 3", value: 3 },
-                { name: "Risposta 4", value: 3 }
-            ];
+        $scope.scalaValutazione = [
+            { name: "Risposta 1", value: 3 },
+            { name: "Risposta 2", value: 3 },
+            { name: "Risposta 3", value: 3 },
+            { name: "Risposta 4", value: 3 }
+        ];
 
-            $scope.inviaDati = function() {
-                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
+        $scope.inviaDati = function() {
+            window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
+            setTimeout(function() {
+                // Apre un iframe con una pagina vuota
+                var iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
                 setTimeout(function() {
-                    window.close();
-                }, 2000);
-            };
+                    document.body.removeChild(iframe);
+                }, 300);
+            }, 1000);
+        };
 
-            $scope.conferma = function () {
-                console.log("Dati confermati:", $scope.scalaValutazione);
-            };
+        $scope.conferma = function () {
+            console.log("Dati confermati:", $scope.scalaValutazione);
+        };
 
-            $timeout(function () {
-                $scope.scalaValutazione.forEach(function(item) {
-                    item.value = 25;
-                });
+        $timeout(function () {
+            $scope.scalaValutazione.forEach(function(item) {
+                item.value = 25;
             });
         });
+    });
     </script>
 </body>
 </html>
