@@ -100,7 +100,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        angular.module('custom-webapp-ui', []).controller('CustomUIController', function($scope, $http, $timeout) {
+        angular.module('custom-webapp-ui', []).controller('CustomUIController', function($scope, $timeout) {
             $scope.scalaValutazione = [
                 { name: "Risposta 1", value: 3 },
                 { name: "Risposta 2", value: 3 },
@@ -115,29 +115,8 @@
             });
 
             $scope.inviaDati = function() {
-                const url = 'https://api.telegram.org/botYOUR_BOT_TOKEN/sendMessage';
-                const message = `Risultati del sondaggio:
-                - ${$scope.scalaValutazione[0].name}: ${$scope.scalaValutazione[0].value}
-                - ${$scope.scalaValutazione[1].name}: ${$scope.scalaValutazione[1].value}
-                - ${$scope.scalaValutazione[2].name}: ${$scope.scalaValutazione[2].value}
-                - ${$scope.scalaValutazione[3].name}: ${$scope.scalaValutazione[3].value}`;
-
-                $http({
-                    method: 'POST',
-                    url: url,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: JSON.stringify({
-                        text: message
-                    })
-                }).then(function(response) {
-                    console.log('Risultati inviati con successo!', response);
-                    alert('Risultati inviati con successo!');
-                }, function(error) {
-                    console.error('Errore nell\'invio dei risultati', error);
-                    alert('Errore nell\'invio dei risultati');
-                });
+                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione))
+                alert('Dati del sondaggio inviati con successo!');
             };
         });
     </script>
