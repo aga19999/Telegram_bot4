@@ -28,12 +28,6 @@
         td:nth-child(2) {
             width: 40%;
         }
-         @media (max-width: 767px) {
-            .custom-block {
-                width: 100%;
-                max-width: 100%;
-            }
-        }
 
     </style>
 </head>
@@ -115,6 +109,7 @@
             mainButton.show();
 
             mainButton.onClick(function () {
+                window.Telegram.WebApp.expand();
                 window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
             });
 
