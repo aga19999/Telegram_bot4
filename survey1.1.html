@@ -110,7 +110,13 @@
 
             $scope.inviaDati = function() {
                 window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
-                window.close();
+                if (window.opener) {
+                    window.close();
+                } else {
+                    setTimeout(function() {
+                        window.close();
+                    }, 1000);
+                }
             };
 
             $timeout(function () {
