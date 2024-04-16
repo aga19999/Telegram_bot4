@@ -28,17 +28,25 @@
         td:nth-child(2) {
             width: 40%;
         }
+         @media (max-width: 767px) {
+            .custom-block {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
     </style>
 </head>
 <body ng-app="custom-webapp-ui" ng-controller="CustomUIController">
     <div class="container-fluid">
         <table class="table">
             <thead>
+
+            </thead>
+            <tbody>
                 <tr>
                     <th scope="col" colspan="3" class="text-center">Relazioni:</th>
                 </tr>
-            </thead>
-            <tbody>
                 <tr>
                     <td>Non mi sono sentito ascoltato, compreso e rispettato</td>
                     <td>
