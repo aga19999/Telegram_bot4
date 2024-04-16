@@ -125,16 +125,19 @@
                 $http({
                     method: 'POST',
                     url: url,
-                    data: {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify({
                         chat_id: 'YOUR_CHAT_ID',
                         text: message
-                    }
+                    })
                 }).then(function(response) {
                     console.log('Risultati inviati con successo!', response);
                     alert('Risultati inviati con successo!');
                 }, function(error) {
-                console.error('Errore nell\'invio dei risultati', error);
-                alert('Errore nell\'invio dei risultati');
+                    console.error('Errore nell\'invio dei risultati', error);
+                    alert('Errore nell\'invio dei risultati');
                 });
             };
         });
