@@ -109,21 +109,18 @@
                 { name: "Risposta 4 ", value: 25 }
             ];
 
-            const mainButton = window.Telegram.WebApp.MainButton;
+             const mainButton = window.Telegram.WebApp.MainButton;
             mainButton.text = "Salva Preferenze";
             mainButton.enable();
             mainButton.show();
 
             mainButton.onClick(function () {
                 console.log("Invio dati:", JSON.stringify($scope.scalaValutazione));
-                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
-                window.Telegram.WebApp.close(); // Chiude la WebApp dopo l'invio
+                window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione), function() {
+                    console.log("Dati inviati con successo!");
+                    window.Telegram.WebApp.close(); // Chiude la WebApp dopo l'invio
+                });
             });
-
-            $scope.conferma = function () {
-                console.log("Dati confermati:", $scope.scalaValutazione);
-            };
-
         });
     </script>
 </body>
