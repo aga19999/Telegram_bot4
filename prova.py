@@ -32,7 +32,8 @@ async def help(update: Update, callback: CallbackContext):
                                     con il loro terapeuta attraverso la compilazione di questionari""")
 
 async def web_app_data(update: Update, context: CallbackContext):
-    data = json.loads(update.message.web_app_data.data)
+    data = update.effective_message.text
+    #data = json.loads(update.message.web_app_data.data)
     user_id = update.message.from_user.id
 
     # Trasforma data in una stringa per il database
@@ -105,7 +106,6 @@ async def mostra_dati_raccolti(update: Update, context: CallbackContext):
 
 async def invia_questionario_due(context: ContextTypes.DEFAULT_TYPE) -> None:
     data = context.job.data
-    now = datetime.now() - timedelta(hours=2)
     id_utente = data["telegram_user_id"]
     url = data["survey"]
 
@@ -202,6 +202,11 @@ async def fetch_elenco_sessioni(context: ContextTypes.DEFAULT_TYPE) -> None:
                 cursor1.execute(query_update_status, (sessione["id_utente"], sessione["id_sessione"]))
                 connection.commit()
 
+def button_callback(update: Update, callback: CallbackContext):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="Preferenze salvate!")
+
 
 if __name__ == '__main__':
     print(f"Il bot è in uso! Usalo cliccando qui: http://t.me/{BOT_USERNAME} !")
@@ -212,6 +217,7 @@ if __name__ == '__main__':
     application.add_handler(CommandHandler('help', help))
     application.add_handler(CommandHandler('show_answers', mostra_dati_raccolti))
     application.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, web_app_data))
+    application.add_handler((CallbackQueryHandler(button_callback, pattern='^save_preferences$')))
     application.run_polling(allowed_updates=Update.ALL_TYPES)
     connection.close()
 

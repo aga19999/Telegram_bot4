@@ -115,8 +115,9 @@
         mainButton.show();
 
         mainButton.onClick(function () {
+            console.log("Invio dati:", JSON.stringify($scope.scalaValutazione));
             window.Telegram.WebApp.sendData(JSON.stringify($scope.scalaValutazione));
-            window.Telegram.WebApp.close(); // Chiamata per chiudere la Web App
+            window.Telegram.WebApp.close(); // Chiude la WebApp dopo l'invio
         });
 
         $scope.conferma = function () {
