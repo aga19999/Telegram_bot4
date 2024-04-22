@@ -1,6 +1,5 @@
-from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, WebAppInfo, Bot, \
-    LinkPreviewOptions, helpers, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.constants import ParseMode
+from telegram import (Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, WebAppInfo, Bot,
+                      InlineKeyboardButton, InlineKeyboardMarkup)
 from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler, MessageHandler, filters, ContextTypes
 from credentials import BOT_TOKEN, BOT_USERNAME, PASSWORD_DATABASE
 import pymysql.cursors
@@ -81,7 +80,8 @@ async def web_app_data(update: Update, context: CallbackContext):
                     connection.commit()
                     # Manda una risposta all'utente dopo aver salvato i dati ricevuti
                     await context.bot.send_message(chat_id=user_result["telegram_user_id"],
-                                                   text="Grazie per aver compilato il sondaggio!")
+                                                   text="Grazie per aver compilato il sondaggio!",
+                                                   reply_markup=ReplyKeyboardRemove())
 
     except Exception as e:
         print(f"Errore durante l'elaborazione dei dati: {e}")
@@ -127,6 +127,7 @@ async def reminder_utente(context: ContextTypes.DEFAULT_TYPE) -> None:
         url = data["survey"]
         id_utente = data["telegram_user_id"]
         id_sessione = data["id_sessione"]
+        now = datetime.now() - timedelta(hours=2)
 
         with connection.cursor() as cursor:
             query = """SELECT *
@@ -138,14 +139,13 @@ async def reminder_utente(context: ContextTypes.DEFAULT_TYPE) -> None:
             if rilevazione is None:
                 # Richiamo la funzione di timeout nel caso in cui anche dopo il reminder l'utente decida di non
                 # compilare il questionario
-                # context.job_queue.run_once(timeout_sondaggio, now + timedelta(seconds=60), data=data)
+                context.job_queue.run_once(timeout_sondaggio, now + timedelta(seconds=20), data=data)
                 kb = [
-                    [InlineKeyboardButton("Clicca qui!", web_app=WebAppInfo(url))]
+                    [KeyboardButton("Clicca qui!", web_app=WebAppInfo(url))]
                 ]
-                reply_markup = InlineKeyboardMarkup(kb)
                 await context.bot.send_message(chat_id=id_utente,
                                                text="Ehi, ti sei dimenticato di compilare il questionario!",
-                                               reply_markup=reply_markup)
+                                               reply_markup=ReplyKeyboardMarkup(kb))
 
     except Exception as e:
         logging.error(
