@@ -97,8 +97,10 @@ async def mostra_dati_raccolti(update: Update, context: CallbackContext):
             cursor.execute(query, user_id)
             risposte = cursor.fetchall()
             # Manda i risultati all'utente
+            await update.message.reply_text("Ecco le risposte inserite nell'ultimo questionario compilato:")
             for risposta in risposte:
-                await update.message.reply_text(f"Risposta: {risposta['risposta']}")
+                risposta_stringa = json.loads(risposta['risposta'])
+                await update.message.reply_text("\n".join([f"{item['name']}: {item['value']}" for item in risposta_stringa]))
 
     except Exception as e:
         print(f"Errore durante il recupero delle risposte: {e}")
