@@ -27,8 +27,8 @@ async def launch_web_ui(update: Update, callback: CallbackContext):
 
 
 async def help(update: Update, callback: CallbackContext):
-    await update.message.reply_text("""Questo bot è rivolto ai terapeuti e permette di metterli in comunicazione"
-                                    con il loro pazienti attraverso l'invio di questionari""")
+    await update.message.reply_text("Questo bot è rivolto ai terapeuti e permette di metterli in comunicazione " +
+                                    "con i loro pazienti attraverso l'invio di questionari")
 
 async def web_app_data(update: Update, context: CallbackContext):
     data = json.loads(update.message.web_app_data.data)
