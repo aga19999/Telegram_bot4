@@ -139,7 +139,7 @@ async def reminder_utente(context: ContextTypes.DEFAULT_TYPE) -> None:
             if rilevazione is None:
                 # Richiamo la funzione di timeout nel caso in cui anche dopo il reminder l'utente decida di non
                 # compilare il questionario
-                context.job_queue.run_once(timeout_sondaggio, now + timedelta(seconds=20), data=data)
+                # context.job_queue.run_once(timeout_sondaggio, now + timedelta(seconds=20), data=data)
                 kb = [
                     [KeyboardButton("Clicca qui!", web_app=WebAppInfo(url))]
                 ]
@@ -215,8 +215,7 @@ if __name__ == '__main__':
 
     """
         Comandi per telegram:
-        start - Scopri cosa può fare questo bot!
-        help - Chiedi assistenza al bot
+        help - Scopri cosa può fare questo bot!
         show_answers - Visualizza i risultati dell'ultimo questionario
         https://aga19999.github.io/Telegram_bot4/survey1.html
         https://aga19999.github.io/Telegram_bot4/survey2.html
